@@ -1,0 +1,12 @@
+{
+
+  "guacamoleVersion" : "1.0.0",
+
+  "name"      : "Anyhow Authentication Extension",
+  "namespace" : "guac-auth-anyhow",
+
+  "authProviders" : [
+    "dev.samloh.guacamole_extensions.anyhow.AnyhowAuthenticationProvider"
+  ]
+
+}
