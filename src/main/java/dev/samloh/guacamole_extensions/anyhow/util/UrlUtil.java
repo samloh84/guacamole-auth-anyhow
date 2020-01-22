@@ -2,7 +2,7 @@ package dev.samloh.guacamole_extensions.anyhow.util;
 
 
 import dev.samloh.guacamole_extensions.anyhow.AnyhowAuthenticationProperties;
-import dev.samloh.guacamole_extensions.anyhow.model.AnyhowGuacamoleConfigurations;
+import dev.samloh.guacamole_extensions.anyhow.model.Configurations;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.environment.Environment;
@@ -26,8 +26,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnyhowGuacamoleUrlConfiguration {
-    public static AnyhowGuacamoleConfigurations getConfigurations(Environment environment, Credentials credentials) throws GuacamoleException, URISyntaxException, IOException {
+public class UrlUtil {
+    public static Configurations getConfigurations(Environment environment, Credentials credentials) throws GuacamoleException, URISyntaxException, IOException {
 
         String username = credentials.getUsername();
         String remoteAddress = credentials.getRemoteAddress();
@@ -128,7 +128,7 @@ public class AnyhowGuacamoleUrlConfiguration {
             HttpEntity entity = response.getEntity();
             if (entity != null) {
 
-                return AnyhowGuacamoleConfigurationsMapper.mapAnyhowGuacamoleConfigurations(entity.getContent(), anyhowUrlFormat);
+                return ParserUtil.mapAnyhowGuacamoleConfigurations(entity.getContent(), anyhowUrlFormat);
             }
 
         }

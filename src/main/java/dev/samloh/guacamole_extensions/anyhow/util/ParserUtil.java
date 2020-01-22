@@ -4,15 +4,15 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import dev.samloh.guacamole_extensions.anyhow.model.AnyhowGuacamoleConfigurations;
+import dev.samloh.guacamole_extensions.anyhow.model.Configurations;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-public class AnyhowGuacamoleConfigurationsMapper {
+public class ParserUtil {
 
-    public static AnyhowGuacamoleConfigurations mapAnyhowGuacamoleConfigurations(InputStream input, String format) throws IOException {
+    public static Configurations mapAnyhowGuacamoleConfigurations(InputStream input, String format) throws IOException {
         ObjectMapper mapper;
 
         switch (StringUtils.lowerCase(format)) {
@@ -30,6 +30,6 @@ public class AnyhowGuacamoleConfigurationsMapper {
                 throw new Error(String.format("Invalid format: %s", format));
         }
 
-        return mapper.readValue(input, AnyhowGuacamoleConfigurations.class);
+        return mapper.readValue(input, Configurations.class);
     }
 }

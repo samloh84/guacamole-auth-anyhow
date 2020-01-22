@@ -2,17 +2,16 @@ package dev.samloh.guacamole_extensions.anyhow.util;
 
 
 import dev.samloh.guacamole_extensions.anyhow.AnyhowAuthenticationProperties;
-import dev.samloh.guacamole_extensions.anyhow.model.AnyhowGuacamoleConfigurations;
+import dev.samloh.guacamole_extensions.anyhow.model.Configurations;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.environment.Environment;
 import org.apache.guacamole.net.auth.Credentials;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
-public class AnyhowGuacamoleExecutableConfiguration {
-    public static AnyhowGuacamoleConfigurations getConfigurations(Environment environment, Credentials credentials) throws GuacamoleException, URISyntaxException, IOException {
+public class ExecutableUtil {
+    public static Configurations getConfigurations(Environment environment, Credentials credentials) throws GuacamoleException, IOException {
 
         String username = credentials.getUsername();
         String remoteAddress = credentials.getRemoteAddress();
@@ -52,6 +51,6 @@ public class AnyhowGuacamoleExecutableConfiguration {
 
         Process process = processBuilder.start();
 
-        return AnyhowGuacamoleConfigurationsMapper.mapAnyhowGuacamoleConfigurations(process.getInputStream(), anyhowExecutableFormat);
+        return ParserUtil.mapAnyhowGuacamoleConfigurations(process.getInputStream(), anyhowExecutableFormat);
     }
 }

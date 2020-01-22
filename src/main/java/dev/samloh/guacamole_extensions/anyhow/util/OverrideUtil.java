@@ -7,7 +7,7 @@ import org.apache.guacamole.protocol.GuacamoleConfiguration;
 
 import java.util.Map;
 
-public class AnyhowGuacamoleConfigurationsApplyOverrides {
+public class OverrideUtil {
     public static void applyOverrides(Environment environment, Map<String, GuacamoleConfiguration> configurations) throws GuacamoleException {
 
 
@@ -39,7 +39,7 @@ public class AnyhowGuacamoleConfigurationsApplyOverrides {
                 }
             }
 
-            if (guacamoleConfiguration.getProtocol().equals("rdp") && overrideRecordingPath != null) {
+            if ((guacamoleConfiguration.getProtocol().equals("rdp") || guacamoleConfiguration.getProtocol().equals("vnc")) && overrideRecordingPath != null) {
                 guacamoleConfiguration.setParameter("recording-path", overrideRecordingPath);
 
                 if (overrideCreateRecordingPath != null) {

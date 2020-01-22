@@ -2,11 +2,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>dev.samloh.guacamole-extensions</groupId>
-    <artifactId>aws-guacamole-extension</artifactId>
+    <groupId>dev.samloh.guacamole_extensions</groupId>
+    <artifactId>guacamole-auth-anyhow</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>aws-guacamole-extension</name>
+    <name>guacamole-auth-anyhow</name>
     <url>http://maven.apache.org</url>
 
     <build>

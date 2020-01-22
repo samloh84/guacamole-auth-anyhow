@@ -4,18 +4,19 @@ import org.apache.guacamole.protocol.GuacamoleConfiguration;
 
 import java.util.Map;
 
-public class AnyhowGuacamoleConfiguration {
+public class Configuration {
 
-    private String connectionId;
+    private String configurationId;
     private String protocol;
     private Map<String, String> parameters;
 
-    public String getConnectionId() {
-        return connectionId;
+
+    public String getConfigurationId() {
+        return configurationId;
     }
 
-    public void setConnectionId(String connectionId) {
-        this.connectionId = connectionId;
+    public void setConfigurationId(String configurationId) {
+        this.configurationId = configurationId;
     }
 
     public String getProtocol() {
@@ -36,7 +37,6 @@ public class AnyhowGuacamoleConfiguration {
 
     public GuacamoleConfiguration asGuacamoleConfiguration() {
         GuacamoleConfiguration guacamoleConfiguration = new GuacamoleConfiguration();
-        guacamoleConfiguration.setConnectionID(this.getConnectionId());
         guacamoleConfiguration.setParameters(this.parameters);
         guacamoleConfiguration.setProtocol(getProtocol());
 

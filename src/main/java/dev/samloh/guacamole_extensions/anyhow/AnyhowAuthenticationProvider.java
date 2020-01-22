@@ -1,27 +1,31 @@
 package dev.samloh.guacamole_extensions.anyhow;
 
-import dev.samloh.guacamole_extensions.anyhow.model.AnyhowGuacamoleConfiguration;
-import dev.samloh.guacamole_extensions.anyhow.model.AnyhowGuacamoleConfigurations;
-import dev.samloh.guacamole_extensions.anyhow.util.AnyhowGuacamoleConfigurationsApplyOverrides;
-import dev.samloh.guacamole_extensions.anyhow.util.AnyhowGuacamoleExecutableConfiguration;
-import dev.samloh.guacamole_extensions.anyhow.util.AnyhowGuacamoleFileConfiguration;
-import dev.samloh.guacamole_extensions.anyhow.util.AnyhowGuacamoleUrlConfiguration;
+import dev.samloh.guacamole_extensions.anyhow.model.Configurations;
+import dev.samloh.guacamole_extensions.anyhow.util.OverrideUtil;
+import dev.samloh.guacamole_extensions.anyhow.util.ExecutableUtil;
+import dev.samloh.guacamole_extensions.anyhow.util.FileUtil;
+import dev.samloh.guacamole_extensions.anyhow.util.UrlUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.guacamole.GuacamoleClientException;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.environment.Environment;
 import org.apache.guacamole.environment.LocalEnvironment;
-import org.apache.guacamole.net.auth.Credentials;
-import org.apache.guacamole.net.auth.simple.SimpleAuthenticationProvider;
+import org.apache.guacamole.net.auth.*;
+import org.apache.guacamole.net.auth.simple.SimpleUserContext;
 import org.apache.guacamole.protocol.GuacamoleConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class AnyhowAuthenticationProvider extends SimpleAuthenticationProvider {
-    private final Logger logger = LoggerFactory.getLogger(AnyhowAuthenticationProvider.class);
+public class AnyhowAuthenticationProvider extends AbstractAuthenticationProvider {
+    private static final Logger logger = LoggerFactory.getLogger(AnyhowAuthenticationProvider.class);
+
+    private Environment environment;
+
+    public AnyhowAuthenticationProvider() throws GuacamoleException {
+        environment = new LocalEnvironment();
+    }
 
     @Override
     public String getIdentifier() {
@@ -29,12 +33,9 @@ public class AnyhowAuthenticationProvider extends SimpleAuthenticationProvider {
     }
 
 
-    @Override
     public Map<String, GuacamoleConfiguration> getAuthorizedConfigurations(Credentials credentials) throws GuacamoleException {
 
-        Environment environment = new LocalEnvironment();
-
-        AnyhowGuacamoleConfigurations configurations = null;
+        Configurations configurations = null;
 
         String anyhowUrl = environment.getProperty(
                 AnyhowAuthenticationProperties.ANYHOW_URL
@@ -49,7 +50,7 @@ public class AnyhowAuthenticationProvider extends SimpleAuthenticationProvider {
         if (!StringUtils.isBlank(anyhowUrl)) {
 
             try {
-                configurations = AnyhowGuacamoleUrlConfiguration.getConfigurations(environment, credentials);
+                configurations = UrlUtil.getConfigurations(environment, credentials);
             } catch (Exception e) {
                 String errorMessage = String.format("Could not retrieve Guacamole Configurations from URL: %s", anyhowUrl);
                 GuacamoleClientException exception = new GuacamoleClientException(errorMessage, e);
@@ -58,7 +59,7 @@ public class AnyhowAuthenticationProvider extends SimpleAuthenticationProvider {
             }
         } else if (!StringUtils.isBlank(anyhowExecutablePath)) {
             try {
-                configurations = AnyhowGuacamoleExecutableConfiguration.getConfigurations(environment, credentials);
+                configurations = ExecutableUtil.getConfigurations(environment, credentials);
 
             } catch (Exception e) {
                 String errorMessage = String.format("Could not retrieve Guacamole Configurations from Executable: %s", anyhowExecutablePath);
@@ -70,7 +71,7 @@ public class AnyhowAuthenticationProvider extends SimpleAuthenticationProvider {
 
         } else if (!StringUtils.isBlank(anyhowFilePath)) {
             try {
-                configurations = AnyhowGuacamoleFileConfiguration.getConfigurations(environment);
+                configurations = FileUtil.getConfigurations(environment);
             } catch (Exception e) {
                 String errorMessage = String.format("Could not retrieve Guacamole Configurations from File Path: %s", anyhowFilePath);
                 GuacamoleClientException exception = new GuacamoleClientException(errorMessage, e);
@@ -80,20 +81,45 @@ public class AnyhowAuthenticationProvider extends SimpleAuthenticationProvider {
         }
 
         if (configurations != null) {
-            Map<String, GuacamoleConfiguration> guacamoleConfigurationMap = new HashMap<>();
-            for (AnyhowGuacamoleConfiguration configuration : configurations.getConfigurations()) {
-                GuacamoleConfiguration guacamoleConfiguration = configuration.asGuacamoleConfiguration();
-                guacamoleConfigurationMap.put(guacamoleConfiguration.getConnectionID(), guacamoleConfiguration);
-            }
-
+            Map<String, GuacamoleConfiguration> guacamoleConfigurationMap = configurations.asGuacamoleConfigurations();
             if (!guacamoleConfigurationMap.isEmpty()) {
-                AnyhowGuacamoleConfigurationsApplyOverrides.applyOverrides(environment, guacamoleConfigurationMap);
+                OverrideUtil.applyOverrides(environment, guacamoleConfigurationMap);
                 return guacamoleConfigurationMap;
             }
         }
 
 
         return null;
+    }
+
+
+    @Override
+    public AuthenticatedUser authenticateUser(Credentials credentials) throws GuacamoleException {
+        Boolean alwaysAuthenticate = environment.getProperty(AnyhowAuthenticationProperties.ANYHOW_ALWAYS_AUTHENTICATE);
+        logger.info(String.format("ANYHOW_ALWAYS_AUTHENTICATE: %s", alwaysAuthenticate));
+
+        if (alwaysAuthenticate) {
+            org.apache.guacamole.net.auth.AuthenticationProvider authenticationProvider = this;
+            return new AbstractAuthenticatedUser() {
+
+                @Override
+                public org.apache.guacamole.net.auth.AuthenticationProvider getAuthenticationProvider() {
+                    return authenticationProvider;
+                }
+
+                @Override
+                public Credentials getCredentials() {
+                    return credentials;
+                }
+            };
+        }
+
+        return null;
+    }
+
+    @Override
+    public UserContext getUserContext(AuthenticatedUser authenticatedUser) throws GuacamoleException {
+        return new SimpleUserContext(this, getAuthorizedConfigurations(authenticatedUser.getCredentials()));
     }
 
 }
