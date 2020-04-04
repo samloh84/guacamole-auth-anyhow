@@ -1,0 +1,8 @@
+{
+  "guacamoleVersion": "1.0.0",
+  "name": "Anyhow Executable Authentication Extension",
+  "namespace": "guac-auth-anyhow-executable",
+  "authProviders": [
+    "dev.samloh.guacamole_extensions.anyhow.AnyhowAuthenticationExecutableProvider"
+  ]
+}
