@@ -1,6 +1,7 @@
 package dev.samloh.guacamole_extensions.anyhow;
 
 
+import org.apache.guacamole.properties.BooleanGuacamoleProperty;
 import org.apache.guacamole.properties.StringGuacamoleProperty;
 
 public abstract class AnyhowAuthenticationExecutableProperties extends AnyhowAuthenticationProperties {
@@ -51,4 +52,11 @@ public abstract class AnyhowAuthenticationExecutableProperties extends AnyhowAut
             };
     public static final String DEFAULT_ANYHOW_EXECUTABLE_REMOTE_HOSTNAME_ENV = "GUACAMOLE_REMOTE_HOSTNAME";
 
+
+    public static final BooleanGuacamoleProperty ANYHOW_EXECUTABLE_ALWAYS_AUTHENTICATE = new BooleanGuacamoleProperty() {
+        @Override
+        public String getName() {
+            return "anyhow-executable-always-authenticate";
+        }
+    };
 }

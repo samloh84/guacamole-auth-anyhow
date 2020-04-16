@@ -28,14 +28,14 @@ public class AwsDescribeEc2InstancesUtil {
 
 
         String awsProfile = environment.getProperty(
-                AnyhowAuthenticationAwsDescribeEc2InstancesProperties.AWS_DESCRIBE_EC2_INSTANCES_PROFILE);
+                AnyhowAuthenticationAwsDescribeEc2InstancesProperties.ANYHOW_AWS_DESCRIBE_EC2_INSTANCES_PROFILE);
 
 
-        Boolean filterByInstanceVpcId = environment.getProperty(AnyhowAuthenticationAwsDescribeEc2InstancesProperties.AWS_DESCRIBE_EC2_INSTANCES_FILTER_BY_INSTANCE_VPC_ID, false);
-        String filterVpcId = environment.getProperty(AnyhowAuthenticationAwsDescribeEc2InstancesProperties.AWS_DESCRIBE_EC2_INSTANCES_FILTER_VPC_ID);
-        String filterSubnetId = environment.getProperty(AnyhowAuthenticationAwsDescribeEc2InstancesProperties.AWS_DESCRIBE_EC2_INSTANCES_FILTER_SUBNET_ID);
-        String filterInstanceGroupName = environment.getProperty(AnyhowAuthenticationAwsDescribeEc2InstancesProperties.AWS_DESCRIBE_EC2_INSTANCES_FILTER_INSTANCE_GROUP_NAME);
-        String filterInstanceGroupId = environment.getProperty(AnyhowAuthenticationAwsDescribeEc2InstancesProperties.AWS_DESCRIBE_EC2_INSTANCES_FILTER_INSTANCE_GROUP_ID);
+        Boolean filterByInstanceVpcId = environment.getProperty(AnyhowAuthenticationAwsDescribeEc2InstancesProperties.ANYHOW_AWS_DESCRIBE_EC2_INSTANCES_FILTER_BY_INSTANCE_VPC_ID, false);
+        String filterVpcId = environment.getProperty(AnyhowAuthenticationAwsDescribeEc2InstancesProperties.ANYHOW_AWS_DESCRIBE_EC2_INSTANCES_FILTER_VPC_ID);
+        String filterSubnetId = environment.getProperty(AnyhowAuthenticationAwsDescribeEc2InstancesProperties.ANYHOW_AWS_DESCRIBE_EC2_INSTANCES_FILTER_SUBNET_ID);
+        String filterInstanceGroupName = environment.getProperty(AnyhowAuthenticationAwsDescribeEc2InstancesProperties.ANYHOW_AWS_DESCRIBE_EC2_INSTANCES_FILTER_INSTANCE_GROUP_NAME);
+        String filterInstanceGroupId = environment.getProperty(AnyhowAuthenticationAwsDescribeEc2InstancesProperties.ANYHOW_AWS_DESCRIBE_EC2_INSTANCES_FILTER_INSTANCE_GROUP_ID);
 
         Ec2ClientBuilder ec2ClientBuilder = Ec2Client.builder();
 

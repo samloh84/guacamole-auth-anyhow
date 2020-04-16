@@ -90,16 +90,23 @@ public class AnyhowGuacamoleUserContext extends AbstractUserContext {
 
     @Override
     public Directory<Connection> getConnectionDirectory() throws GuacamoleException {
-        Map<String, Connection> connectionMap = new HashMap<>();
-        MapUtils.populateMap(connectionMap, connections, Connection::getIdentifier, connection -> connection);
-        return new SimpleDirectory<Connection>(connectionMap);
+        if (connections != null){
+            Map<String, Connection> connectionMap = new HashMap<>();
+            MapUtils.populateMap(connectionMap, connections, Connection::getIdentifier, connection -> connection);
+            return new SimpleDirectory<Connection>(connectionMap);
+        }
+        return super.getConnectionDirectory();
     }
 
     @Override
     public Directory<ConnectionGroup> getConnectionGroupDirectory() throws GuacamoleException {
-        Map<String, ConnectionGroup> connectionGroupMap = new HashMap<>();
-        MapUtils.populateMap(connectionGroupMap, connectionGroups, ConnectionGroup::getIdentifier, connectionGroup -> connectionGroup);
-        return new SimpleDirectory<ConnectionGroup>(connectionGroupMap);
+        if (connectionGroups != null){
+            Map<String, ConnectionGroup> connectionGroupMap = new HashMap<>();
+            MapUtils.populateMap(connectionGroupMap, connectionGroups, ConnectionGroup::getIdentifier, connectionGroup -> connectionGroup);
+            return new SimpleDirectory<ConnectionGroup>(connectionGroupMap);
+        }
+
+        return super.getConnectionGroupDirectory();
     }
 
 

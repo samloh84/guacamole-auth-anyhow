@@ -1,11 +1,15 @@
 package dev.samloh.guacamole_extensions.anyhow;
 
+import dev.samloh.guacamole_extensions.anyhow.model.guacamole.AnyhowGuacamoleAuthenticatedUser;
+import dev.samloh.guacamole_extensions.anyhow.model.guacamole.AnyhowGuacamoleUser;
 import dev.samloh.guacamole_extensions.anyhow.model.jackson.AnyhowConfiguration;
+import dev.samloh.guacamole_extensions.anyhow.model.jackson.AnyhowUser;
 import dev.samloh.guacamole_extensions.anyhow.util.UrlUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.guacamole.GuacamoleClientException;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.environment.Environment;
+import org.apache.guacamole.net.auth.AuthenticatedUser;
 import org.apache.guacamole.net.auth.Credentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +24,23 @@ public class AnyhowAuthenticationUrlProvider extends AnyhowAuthenticationProvide
     @Override
     public String getIdentifier() {
         return "anyhow-url";
+    }
+
+    @Override
+    public AuthenticatedUser authenticateUser(Credentials credentials) throws GuacamoleException {
+
+        Boolean alwaysAuthenticate = environment.getProperty(
+                AnyhowAuthenticationUrlProperties.ANYHOW_URL_ALWAYS_AUTHENTICATE, false
+        );
+
+        if (alwaysAuthenticate) {
+            AnyhowUser user = new AnyhowUser();
+            user.setIdentifier(credentials.getUsername());
+            AnyhowGuacamoleUser anyhowGuacamoleUser = new AnyhowGuacamoleUser(user);
+            return new AnyhowGuacamoleAuthenticatedUser(this, credentials, anyhowGuacamoleUser);
+        }
+
+        return super.authenticateUser(credentials);
     }
 
     @Override

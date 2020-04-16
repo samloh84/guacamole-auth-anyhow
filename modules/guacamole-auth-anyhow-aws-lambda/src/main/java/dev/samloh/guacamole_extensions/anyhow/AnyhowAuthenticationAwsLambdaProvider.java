@@ -32,7 +32,7 @@ public class AnyhowAuthenticationAwsLambdaProvider extends AnyhowAuthenticationP
     public AuthenticatedUser authenticateUser(Credentials credentials) throws GuacamoleException {
 
         Boolean alwaysAuthenticate = environment.getProperty(
-                AnyhowAuthenticationAwsLambdaProperties.AWS_LAMBDA_ALWAYS_AUTHENTICATE
+                AnyhowAuthenticationAwsLambdaProperties.ANYHOW_AWS_LAMBDA_ALWAYS_AUTHENTICATE, false
         );
 
         if (alwaysAuthenticate) {
@@ -49,7 +49,7 @@ public class AnyhowAuthenticationAwsLambdaProvider extends AnyhowAuthenticationP
     public AnyhowConfiguration loadConfiguration(Credentials credentials, Environment environment) throws GuacamoleException {
 
         String anyhowAwsLambda = environment.getProperty(
-                AnyhowAuthenticationAwsLambdaProperties.AWS_LAMBDA_FUNCTION
+                AnyhowAuthenticationAwsLambdaProperties.ANYHOW_AWS_LAMBDA_FUNCTION
         );
 
         if (!StringUtils.isBlank(anyhowAwsLambda)) {

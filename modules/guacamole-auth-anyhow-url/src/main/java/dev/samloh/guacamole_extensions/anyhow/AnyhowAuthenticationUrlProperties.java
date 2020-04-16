@@ -1,5 +1,6 @@
 package dev.samloh.guacamole_extensions.anyhow;
 
+import org.apache.guacamole.properties.BooleanGuacamoleProperty;
 import org.apache.guacamole.properties.StringGuacamoleProperty;
 
 public abstract class AnyhowAuthenticationUrlProperties extends AnyhowAuthenticationProperties {
@@ -84,4 +85,10 @@ public abstract class AnyhowAuthenticationUrlProperties extends AnyhowAuthentica
     public static final String DEFAULT_ANYHOW_URL_API_KEY_PARAMETER = "key";
 
 
+    public static final BooleanGuacamoleProperty ANYHOW_URL_ALWAYS_AUTHENTICATE = new BooleanGuacamoleProperty() {
+        @Override
+        public String getName() {
+            return "anyhow-url-always-authenticate";
+        }
+    };
 }

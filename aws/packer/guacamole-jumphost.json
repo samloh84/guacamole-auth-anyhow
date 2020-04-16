@@ -1,0 +1,35 @@
+{
+  "builders": [{
+    "type": "amazon-ebs",
+    "region": "ap-southeast-1",
+    "source_ami_filter": {
+      "filters": {
+        "product-code": "aw0evgkw8e5c1q413zgy5pjce",
+        "ena-support": "true",
+        "owner-alias": "aws-marketplace"
+      },
+      "owners": ["679593333241"],
+      "most_recent": true
+    },
+    "instance_type": "t3.micro",
+    "ssh_username": "centos",
+    "ami_name": "guacamole-jumphost {{timestamp}}",
+    "tags": {
+      "Name": "guacamole-jumphost"
+    },
+    "temporary_security_group_source_cidrs": ["{{user `local_cidr`}}"]
+  }],
+  "provisioners":[{
+    "type": "shell",
+    "scripts": [
+      "scripts/install-aws-cli.sh",
+      "scripts/install-docker.sh",
+      "scripts/pull-images.sh"
+    ],
+    "execute_command": "sudo /bin/bash -c '{{ .Vars }} {{ .Path }}'"
+  }],
+  "variables": {
+    "local_cidr": "{{env `LOCAL_CIDR`}}"
+  }
+
+}

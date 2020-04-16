@@ -1,9 +1,7 @@
 package dev.samloh.guacamole_extensions.anyhow.model.guacamole;
 
 import dev.samloh.guacamole_extensions.anyhow.model.jackson.AnyhowUser;
-import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.net.auth.AbstractUser;
-import org.apache.guacamole.net.auth.RelatedObjectSet;
 
 import java.util.Map;
 

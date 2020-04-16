@@ -78,11 +78,4 @@ public abstract class AnyhowAuthenticationProperties {
     };
 
 
-    public static final BooleanGuacamoleProperty ANYHOW_ALWAYS_AUTHENTICATE = new BooleanGuacamoleProperty() {
-        @Override
-        public String getName() {
-            return "anyhow-always-authenticate";
-        }
-    };
-
 }

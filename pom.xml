@@ -21,7 +21,8 @@
         <module>modules/guacamole-auth-anyhow-executable</module>
         <module>modules/guacamole-auth-anyhow-url</module>
         <module>modules/guacamole-auth-anyhow-aws-lambda</module>
-        <module>modules/guacamole-auth-anyhow-aws-describe-ec2-instances</module>
+        <module>modules/guacamole-auth-anyhow-aws-describe-ec2-instances
+        </module>
 
     </modules>
 

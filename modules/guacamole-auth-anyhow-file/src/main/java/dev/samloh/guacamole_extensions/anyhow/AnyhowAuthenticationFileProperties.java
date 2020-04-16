@@ -1,5 +1,6 @@
 package dev.samloh.guacamole_extensions.anyhow;
 
+import org.apache.guacamole.properties.BooleanGuacamoleProperty;
 import org.apache.guacamole.properties.StringGuacamoleProperty;
 
 public abstract class AnyhowAuthenticationFileProperties extends AnyhowAuthenticationProperties {
@@ -24,5 +25,11 @@ public abstract class AnyhowAuthenticationFileProperties extends AnyhowAuthentic
             };
     public static final String DEFAULT_ANYHOW_FILE_FORMAT = "json";
 
+    public static final BooleanGuacamoleProperty ANYHOW_FILE_ALWAYS_AUTHENTICATE = new BooleanGuacamoleProperty() {
+        @Override
+        public String getName() {
+            return "anyhow-file-always-authenticate";
+        }
+    };
 
 }

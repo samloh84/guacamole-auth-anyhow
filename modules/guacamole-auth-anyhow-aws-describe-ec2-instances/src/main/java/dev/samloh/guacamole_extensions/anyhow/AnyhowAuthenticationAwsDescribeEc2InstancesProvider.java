@@ -29,7 +29,7 @@ public class AnyhowAuthenticationAwsDescribeEc2InstancesProvider extends AnyhowA
     public AuthenticatedUser authenticateUser(Credentials credentials) throws GuacamoleException {
 
         Boolean alwaysAuthenticate = environment.getProperty(
-                AnyhowAuthenticationAwsDescribeEc2InstancesProperties.AWS_DESCRIBE_EC2_INSTANCES_ALWAYS_AUTHENTICATE
+                AnyhowAuthenticationAwsDescribeEc2InstancesProperties.ANYHOW_AWS_DESCRIBE_EC2_INSTANCES_ALWAYS_AUTHENTICATE, false
         );
 
         if (alwaysAuthenticate) {
@@ -46,7 +46,7 @@ public class AnyhowAuthenticationAwsDescribeEc2InstancesProvider extends AnyhowA
     public AnyhowConfiguration loadConfiguration(Credentials credentials, Environment environment) throws GuacamoleException {
 
         Boolean describeEc2Instances = environment.getProperty(
-                AnyhowAuthenticationAwsDescribeEc2InstancesProperties.AWS_DESCRIBE_EC2_INSTANCES
+                AnyhowAuthenticationAwsDescribeEc2InstancesProperties.ANYHOW_AWS_DESCRIBE_EC2_INSTANCES
                 , false);
 
         if (describeEc2Instances) {
