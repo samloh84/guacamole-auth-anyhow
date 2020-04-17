@@ -10,13 +10,15 @@
   "author": "Samuel Loh Yin Kang <samuel.loh.yk@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.608.0",
+    "aws-sdk": "^2.657.0",
     "bluebird": "^3.7.2",
     "lodash": "^4.17.15"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.8.4",
+    "@babel/register": "^7.9.0",
     "babel-loader": "^8.0.6",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"

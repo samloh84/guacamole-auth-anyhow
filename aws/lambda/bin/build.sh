@@ -14,6 +14,7 @@ PROJECT_DIR="$(
 )"
 echo "PROJECT_DIR: ${PROJECT_DIR}"
 
+
 cd "${LAMBDA_SRC_DIR}"
 npm install
 mkdir -p ./output

@@ -1,20 +1,43 @@
-import EC2 from 'aws-sdk/clients/ec2';
-import * as Promise from 'bluebird';
-import {
-    find as _find,
-    flatten as _flatten,
-    get as _get,
-    isEmpty as _isEmpty,
-    lowerCase as _lowerCase,
-    map as _map,
-    set as _set,
-    split as _split
-} from 'lodash';
+const EC2 = require('aws-sdk/clients/EC2');
+const Promise = require('bluebird');
+const _ = require('lodash');
+const _each = require('lodash/each');
+const _map = require('lodash/map');
+const _get = require('lodash/get');
+const _set = require('lodash/set');
+const _flatten = require('lodash/flatten');
+const _isEmpty = require('lodash/isEmpty');
+const _find = require('lodash/find');
+const _lowerCase = require('lodash/lowerCase');
+const _has = require('lodash/has');
+const _split = require('lodash/split');
+
+
+
+const attributeMap = {
+
+    'image_id': 'ImageId',
+    'instance_id': 'InstanceId',
+    'instance_type': 'InstanceType',
+    'key_name': 'KeyName',
+    'launch_time': 'LaunchTime',
+    'placement_availability_zone': 'Placement.AvailabilityZone',
+    'placement_group_name': 'Placement.GroupName',
+    'placement_tenancy': 'Placement.Tenancy',
+    'private_dns_name': 'PrivateDnsName',
+    'private_ip_address': 'PrivateIpAddress',
+    'public_dns_name': 'PublicDnsName',
+    'public_ip_address': 'PublicIpAddress',
+    'subnet_id': 'SubnetId',
+    'vpc_id': 'VpcId',
+    'owner_id': 'OwnerId',
+    'reservation_id': 'ReservationId'
+}
+
 
 export const handler = function () {
 
     let ec2 = new EC2({apiVersion: '2016-11-15', region: 'ap-southeast-1'});
-    ec2.config.setPromisesDependency(Promise);
 
     let vpcIds = _get(process.env, 'VPC_IDS', "");
     if (!_isEmpty(vpcIds)) {
@@ -41,31 +64,46 @@ export const handler = function () {
         params = null;
     }
 
-    return ec2.describeInstances(params)
-        .promise()
+    return Promise.resolve(ec2.describeInstances(params).promise())
         .then(function (response) {
-
             let instances = _flatten(_map(response.Reservations, 'Instances'));
             let connections = _map(instances, function (instance) {
-                let configuration = {};
-                let configurationId = _get(_find(instance.Tags, {Key: 'Name'}), 'Value', _get(instance, 'InstanceId'));
-                _set(configuration, 'identifier', configurationId);
-                _set(configuration, 'name', configurationId);
+                let connection = {};
+                let instanceTags = _get(instance, 'Tags');
+
+                let instanceId = _get(instance, 'InstanceId');
+                let instanceName = _get(_find(instanceTags, {Key: 'Name'}), 'Value', instanceId);
+
+                _set(connection, 'identifier', instanceId);
+                _set(connection, 'name', instanceName);
                 if (_lowerCase(instance.Platform) === "windows") {
-                    _set(configuration, 'protocol', 'rdp');
-                    _set(configuration, ['parameters', 'hostname'], instance.PrivateIpAddress);
-                    _set(configuration, ['parameters', 'port'], '3389');
-                    _set(configuration, ['parameters', 'security'], 'tls');
-                    _set(configuration, ['parameters', 'ignore-cert'], 'true');
-                    _set(configuration, ['parameters', 'disable-auth'], 'true');
+                    _set(connection, 'protocol', 'rdp');
+                    _set(connection, ['parameters', 'hostname'], instance.PrivateIpAddress);
+                    _set(connection, ['parameters', 'port'], '3389');
+                    _set(connection, ['parameters', 'security'], 'tls');
+                    _set(connection, ['parameters', 'ignore-cert'], 'true');
+                    _set(connection, ['parameters', 'disable-auth'], 'true');
 
                 } else {
-                    _set(configuration, 'protocol', 'ssh');
-                    _set(configuration, ['parameters', 'hostname'], instance.PrivateIpAddress);
-                    _set(configuration, ['parameters', 'port'], '22');
+                    _set(connection, 'protocol', 'ssh');
+                    _set(connection, ['parameters', 'hostname'], instance.PrivateIpAddress);
+                    _set(connection, ['parameters', 'port'], '22');
                 }
 
-                return configuration;
+                _each(attributeMap, function (path, key) {
+                    if (_has(instance, path)) {
+                        _set(connection, ['attributes', key], _get(instance, path));
+                    }
+                });
+
+                if (!_isEmpty(instanceTags)) {
+                    _each(instance.Tags, function (tag) {
+                        _set(connection, ['attributes', `tag:${tag.Key}`], tag.Value);
+                    });
+                }
+
+
+                return connection;
             });
 
             return {"connections": connections};
