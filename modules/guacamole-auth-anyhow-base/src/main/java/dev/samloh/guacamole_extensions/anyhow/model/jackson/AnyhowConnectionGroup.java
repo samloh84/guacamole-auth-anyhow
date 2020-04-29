@@ -1,18 +1,19 @@
 package dev.samloh.guacamole_extensions.anyhow.model.jackson;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class AnyhowConnectionGroup {
     private String name;
     private String identifier;
-    private Map<String, String> attributes;
+    private Map<String, String> attributes = Collections.emptyMap();
 
-    private List<String> connectionGroups;
-    private List<String> connections;
+    private List<String> connectionGroups = Collections.emptyList();
+    private List<String> connections = Collections.emptyList();
 
-    private List<String> authorizedUsers;
-    private List<String> authorizedUserGroups;
+    private List<String> authorizedUsers = Collections.emptyList();
+    private List<String> authorizedUserGroups = Collections.emptyList();
 
     public String getName() {
         return name;

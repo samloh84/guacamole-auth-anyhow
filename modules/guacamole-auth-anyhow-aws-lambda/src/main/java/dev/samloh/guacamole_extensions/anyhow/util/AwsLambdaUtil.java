@@ -2,7 +2,6 @@ package dev.samloh.guacamole_extensions.anyhow.util;
 
 
 import dev.samloh.guacamole_extensions.anyhow.AnyhowAuthenticationAwsLambdaProperties;
-import dev.samloh.guacamole_extensions.anyhow.AnyhowAuthenticationAwsLambdaProvider;
 import dev.samloh.guacamole_extensions.anyhow.model.jackson.AnyhowConfiguration;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.guacamole.GuacamoleException;

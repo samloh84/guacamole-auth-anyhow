@@ -3,7 +3,7 @@
 INTERACTIVE=${INTERACTIVE:-0}
 
 for SECRET_ENV in $(find . -name ".secret-env-*.sh"); do
-  source ${SECRET_ENV}
+  source "${SECRET_ENV}"
 done
 
 docker pull guacamole/guacd:latest

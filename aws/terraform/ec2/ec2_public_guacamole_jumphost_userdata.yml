@@ -1,6 +1,6 @@
 #cloud-config
 runcmd:
-  - cloud-init-per once start_guacamole bash -c 'cd /root/guacamole && pwd && /usr/local/bin/docker-compose up --detach'
+  - cloud-init-per once start_guacamole bash -c 'cd /root/guacamole && docker-compose up --detach'
 
 write_files:
   - encoding: b64

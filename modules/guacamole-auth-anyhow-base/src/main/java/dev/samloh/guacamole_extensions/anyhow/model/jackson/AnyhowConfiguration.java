@@ -1,13 +1,14 @@
 package dev.samloh.guacamole_extensions.anyhow.model.jackson;
 
+import java.util.Collections;
 import java.util.List;
 
 public class AnyhowConfiguration {
 
-    private List<AnyhowConnection> connections;
-    private List<AnyhowConnectionGroup> connectionGroups;
-    private List<AnyhowUser> users;
-    private List<AnyhowUserGroup> userGroups;
+    private List<AnyhowConnection> connections = Collections.emptyList();
+    private List<AnyhowConnectionGroup> connectionGroups = Collections.emptyList();
+    private List<AnyhowUser> users = Collections.emptyList();
+    private List<AnyhowUserGroup> userGroups = Collections.emptyList();
 
     public List<AnyhowConnection> getConnections() {
         return connections;

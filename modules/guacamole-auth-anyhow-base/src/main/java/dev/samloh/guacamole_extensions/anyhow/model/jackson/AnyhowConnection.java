@@ -3,6 +3,7 @@ package dev.samloh.guacamole_extensions.anyhow.model.jackson;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.guacamole.protocol.GuacamoleConfiguration;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,13 +12,13 @@ public class AnyhowConnection {
 
     private String name;
     private String identifier;
-    private Map<String, String> attributes;
+    private Map<String, String> attributes = Collections.emptyMap();
 
     private String protocol;
-    private Map<String, String> parameters;
+    private Map<String, String> parameters = Collections.emptyMap();
 
-    private List<String> authorizedUsers;
-    private List<String> authorizedUserGroups;
+    private List<String> authorizedUsers = Collections.emptyList();
+    private List<String> authorizedUserGroups = Collections.emptyList();
 
     public static Map<String, GuacamoleConfiguration> toGuacamoleConfigurations(List<AnyhowConnection> connections) {
         Map<String, GuacamoleConfiguration> configurations = new HashMap<>();

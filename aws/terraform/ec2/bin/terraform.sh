@@ -26,7 +26,6 @@ if ls "${SCRIPT_PATH}"/.secret-env-*.sh; then
 fi
 
 function apply() {
-
   if ! ls "${TERRAFORM_MODULE_DIR}"/guacamole-config.zip; then
 
     cd "${LAMBDA_DIR}"/bin
@@ -96,6 +95,11 @@ function lambda_build() {
   cp "${LAMBDA_DIR}"/output/guacamole-config.zip "${TERRAFORM_MODULE_DIR}"/guacamole-config.zip
 }
 
+function invoke_lambda() {
+    GUACAMOLE_FUNCTION_NAME=$(terraform output -json | jq -r '.lambda_name.value')
+
+  aws lambda invoke --function-name "${GUACAMOLE_FUNCTION_NAME}" "${GUACAMOLE_FUNCTION_NAME}-output.log"
+}
 
 function rebuild() {
   docker_rebuild
@@ -137,6 +141,9 @@ else
     ;;
   taint)
     taint
+    ;;
+  invoke_lambda)
+    invoke_lambda
     ;;
   *)
     echo "${HELP_MESSAGE}"

@@ -1,9 +1,10 @@
 package dev.samloh.guacamole_extensions.anyhow.util;
 
 import dev.samloh.guacamole_extensions.anyhow.AnyhowAuthenticationProperties;
-import dev.samloh.guacamole_extensions.anyhow.model.guacamole.AnyhowGuacamoleConnection;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.environment.Environment;
+import org.apache.guacamole.net.auth.Connection;
 import org.apache.guacamole.protocol.GuacamoleConfiguration;
 
 import java.util.Collection;
@@ -13,7 +14,7 @@ public class OverrideUtil {
     private OverrideUtil() {
     }
 
-    public static void applyOverrides(Environment environment, Collection<AnyhowGuacamoleConnection> connections) throws GuacamoleException {
+    public static void applyOverrides(Environment environment, Collection<Connection> connections) throws GuacamoleException {
 
 
         String overrideTypescriptName = environment.getProperty(AnyhowAuthenticationProperties.ANYHOW_OVERRIDE_TYPESCRIPT_NAME);
@@ -33,26 +34,26 @@ public class OverrideUtil {
 
         connections.forEach((connection) -> {
             GuacamoleConfiguration guacamoleConfiguration = connection.getConfiguration();
-            if (guacamoleConfiguration.getProtocol().equals("ssh") && overrideTypescriptPath != null) {
+            if (guacamoleConfiguration.getProtocol().equals("ssh") && StringUtils.isNotBlank(overrideTypescriptPath)) {
                 guacamoleConfiguration.setParameter("typescript-path", overrideTypescriptPath);
 
                 if (overrideCreateTypescriptPath != null) {
-                    guacamoleConfiguration.setParameter("create-typescript-path", String.valueOf(overrideCreateTypescriptPath));
+                    guacamoleConfiguration.setParameter("create-typescript-path", String.valueOf(overrideCreateRecordingPath));
                 }
 
-                if (overrideTypescriptName != null) {
+                if (StringUtils.isNotBlank(overrideTypescriptName)) {
                     guacamoleConfiguration.setParameter("typescript-name", overrideTypescriptName);
                 }
             }
 
-            if ((guacamoleConfiguration.getProtocol().equals("rdp") || guacamoleConfiguration.getProtocol().equals("vnc")) && overrideRecordingPath != null) {
+            if ((guacamoleConfiguration.getProtocol().equals("rdp") || guacamoleConfiguration.getProtocol().equals("vnc")) && StringUtils.isNotBlank(overrideRecordingPath)) {
                 guacamoleConfiguration.setParameter("recording-path", overrideRecordingPath);
 
                 if (overrideCreateRecordingPath != null) {
                     guacamoleConfiguration.setParameter("create-recording-path", String.valueOf(overrideCreateRecordingPath));
                 }
 
-                if (overrideRecordingName != null) {
+                if (StringUtils.isNotBlank(overrideRecordingName)) {
                     guacamoleConfiguration.setParameter("recording-name", overrideRecordingName);
                 }
 
@@ -73,7 +74,7 @@ public class OverrideUtil {
             if (overrideEnableSftp != null) {
                 guacamoleConfiguration.setParameter("enable-sftp", String.valueOf(overrideEnableSftp));
 
-                if (overrideSftpRootDirectory != null) {
+                if (StringUtils.isNotBlank(overrideSftpRootDirectory)) {
                     guacamoleConfiguration.setParameter("sftp-root-directory", overrideSftpRootDirectory);
                 }
             }

@@ -1,0 +1,117 @@
+{
+  "connections": [
+    {
+      "identifier": "i-0d0c02634fcb9313f",
+      "name": "guacamole-jumphost",
+      "protocol": "ssh",
+      "parameters": {
+        "hostname": "10.0.0.21",
+        "port": "22"
+      },
+      "attributes": {
+        "image_id": "ami-0e9255d54af0699ac",
+        "instance_id": "i-0d0c02634fcb9313f",
+        "instance_type": "t3.small",
+        "key_name": "guacamole2",
+        "launch_time": "2020-04-28T11:08:32.000Z",
+        "placement_availability_zone": "ap-southeast-1a",
+        "placement_group_name": "",
+        "placement_tenancy": "default",
+        "private_dns_name": "ip-10-0-0-21.ap-southeast-1.compute.internal",
+        "private_ip_address": "10.0.0.21",
+        "public_dns_name": "ec2-52-77-219-26.ap-southeast-1.compute.amazonaws.com",
+        "public_ip_address": "52.77.219.26",
+        "subnet_id": "subnet-09750c2797ef493ad",
+        "vpc_id": "vpc-01b150f6700999fe4",
+        "tag:Custodian-Scheduler-StopTime": "off=();tz=sgt",
+        "tag:Project": "guacamole",
+        "tag:Owner": "Samuel",
+        "tag:Name": "guacamole-jumphost"
+      }
+    },
+    {
+      "identifier": "i-0011018af02a29f6a",
+      "name": "guacamole-centos-workload",
+      "protocol": "ssh",
+      "parameters": {
+        "hostname": "10.0.2.98",
+        "port": "22"
+      },
+      "attributes": {
+        "image_id": "ami-07f65177cb990d65b",
+        "instance_id": "i-0011018af02a29f6a",
+        "instance_type": "t3.micro",
+        "key_name": "guacamole2",
+        "launch_time": "2020-04-13T06:31:56.000Z",
+        "placement_availability_zone": "ap-southeast-1a",
+        "placement_group_name": "",
+        "placement_tenancy": "default",
+        "private_dns_name": "ip-10-0-2-98.ap-southeast-1.compute.internal",
+        "private_ip_address": "10.0.2.98",
+        "public_dns_name": "",
+        "subnet_id": "subnet-0bdf8cf0047cc5266",
+        "vpc_id": "vpc-01b150f6700999fe4",
+        "tag:Custodian-Scheduler-StopTime": "off=();tz=sgt",
+        "tag:Name": "guacamole-centos-workload",
+        "tag:Owner": "Samuel",
+        "tag:Project": "guacamole"
+      }
+    },
+    {
+      "identifier": "i-0458970917b1e35be",
+      "name": "guacamole-windows-server-2019-workload",
+      "protocol": "rdp",
+      "parameters": {
+        "hostname": "10.0.2.150",
+        "port": "3389",
+        "security": "tls",
+        "ignore-cert": "true",
+        "disable-auth": "true"
+      },
+      "attributes": {
+        "image_id": "ami-0fdb514b22fa2aed1",
+        "instance_id": "i-0458970917b1e35be",
+        "instance_type": "t3.small",
+        "key_name": "guacamole2",
+        "launch_time": "2020-04-21T01:47:24.000Z",
+        "placement_availability_zone": "ap-southeast-1a",
+        "placement_group_name": "",
+        "placement_tenancy": "default",
+        "private_dns_name": "ip-10-0-2-150.ap-southeast-1.compute.internal",
+        "private_ip_address": "10.0.2.150",
+        "public_dns_name": "",
+        "subnet_id": "subnet-0bdf8cf0047cc5266",
+        "vpc_id": "vpc-01b150f6700999fe4",
+        "tag:Project": "guacamole",
+        "tag:Name": "guacamole-windows-server-2019-workload",
+        "tag:Custodian-Scheduler-StopTime": "off=();tz=sgt",
+        "tag:Owner": "Samuel"
+      }
+    }
+  ],
+  "connectionGroups": [
+    {
+      "identifier": "subnet-0bdf8cf0047cc5266",
+      "name": "guacamole-subnet-private",
+      "connections": [
+        "i-0011018af02a29f6a",
+        "i-0458970917b1e35be"
+      ]
+    },
+    {
+      "identifier": "subnet-09750c2797ef493ad",
+      "name": "guacamole-subnet-public",
+      "connections": [
+        "i-0d0c02634fcb9313f"
+      ]
+    },
+    {
+      "identifier": "vpc-01b150f6700999fe4",
+      "name": "guacamole-vpc",
+      "connectionGroups": [
+        "subnet-0bdf8cf0047cc5266",
+        "subnet-09750c2797ef493ad"
+      ]
+    }
+  ]
+}

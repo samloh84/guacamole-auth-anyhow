@@ -1,23 +1,17 @@
 package dev.samloh.guacamole_extensions.anyhow.model.jackson;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class AnyhowUserGroup {
     private String name;
     private String identifier;
-    private Map<String, String> attributes;
+    private Map<String, String> attributes = Collections.emptyMap();
 
-    private List<String> users;
-    private List<String> groups;
+    private List<String> users = Collections.emptyList();
+    private List<String> groups = Collections.emptyList();
 
-    public static List<String> getUserEffectiveGroupMembership(String username, List<AnyhowUserGroup> groups) {
-        return null;
-    }
-
-    public static List<String> getGroupEffectiveGroupMembership(String groupIdentifier, List<AnyhowUserGroup> groups) {
-        return null;
-    }
 
     public String getName() {
         return name;

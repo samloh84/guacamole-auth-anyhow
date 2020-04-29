@@ -85,7 +85,7 @@ resource "aws_lambda_function" "guacamole_config_dev" {
 
   tags = {
     Name = "guacamole-config-dev"
-    Project = "${var.project}"
-    Owner = "${var.owner}"
+    Project = var.project
+    Owner = var.owner
   }
 }

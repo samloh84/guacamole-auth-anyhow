@@ -1,113 +1,124 @@
 package dev.samloh.guacamole_extensions.anyhow.model.guacamole;
 
-import dev.samloh.guacamole_extensions.anyhow.AnyhowAuthenticationProvider;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.guacamole.GuacamoleException;
+import org.apache.guacamole.form.Form;
 import org.apache.guacamole.net.auth.*;
-import org.apache.guacamole.net.auth.permission.ObjectPermissionSet;
 import org.apache.guacamole.net.auth.simple.SimpleDirectory;
-import org.apache.guacamole.net.auth.simple.SimpleObjectPermissionSet;
-import org.apache.guacamole.net.auth.simple.SimpleUser;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class AnyhowGuacamoleUserContext extends AbstractUserContext {
+    private User self;
+    private AuthenticationProvider authenticationProvider;
+    private Directory<User> userDirectory = new SimpleDirectory<>();
+    private Directory<UserGroup> userGroupDirectory = new SimpleDirectory<>();
+    private Directory<Connection> connectionDirectory = new SimpleDirectory<>();
+    private Directory<ConnectionGroup> connectionGroupDirectory = new SimpleDirectory<>();
+    private Collection<Form> userAttributes = new ArrayList<>();
+    private Collection<Form> userGroupAttributes = new ArrayList<>();
+    private Collection<Form> connectionAttributes = new ArrayList<>();
+    private Collection<Form> connectionGroupAttributes = new ArrayList<>();
+    private ConnectionGroup rootConnectionGroup = new AnyhowGuacamoleConnectionGroup();
 
-    private AnyhowAuthenticationProvider authenticationProvider;
-    private AuthenticatedUser authenticatedUser;
-    private AnyhowGuacamoleUser user;
-    private List<AnyhowGuacamoleUserGroup> userGroups;
-    private List<AnyhowGuacamoleConnection> connections;
-    private List<AnyhowGuacamoleConnectionGroup> connectionGroups;
 
-    public AuthenticatedUser getAuthenticatedUser() {
-        return authenticatedUser;
+    public void setSelf(User self) {
+        this.self = self;
     }
 
-    public void setAuthenticatedUser(AuthenticatedUser authenticatedUser) {
-        this.authenticatedUser = authenticatedUser;
-    }
-
-    public AnyhowGuacamoleUser getUser() {
-        return user;
-    }
-
-    public void setUser(AnyhowGuacamoleUser user) {
-        this.user = user;
-    }
-
-    public List<AnyhowGuacamoleUserGroup> getUserGroups() {
-        return userGroups;
-    }
-
-    public void setUserGroups(List<AnyhowGuacamoleUserGroup> userGroups) {
-        this.userGroups = userGroups;
-    }
-
-    public List<AnyhowGuacamoleConnection> getConnections() {
-        return connections;
-    }
-
-    public void setConnections(List<AnyhowGuacamoleConnection> connections) {
-        this.connections = connections;
-    }
-
-    public List<AnyhowGuacamoleConnectionGroup> getConnectionGroups() {
-        return connectionGroups;
-    }
-
-    public void setConnectionGroups(List<AnyhowGuacamoleConnectionGroup> connectionGroups) {
-        this.connectionGroups = connectionGroups;
-    }
-
-    @Override
-    public User self() {
-        return new SimpleUser(authenticatedUser.getCredentials().getUsername()) {
-
-            @Override
-            public ObjectPermissionSet getConnectionGroupPermissions() throws GuacamoleException {
-                return new SimpleObjectPermissionSet(getConnectionDirectory().getIdentifiers());
-            }
-
-            @Override
-            public ObjectPermissionSet getConnectionPermissions() throws GuacamoleException {
-                return new SimpleObjectPermissionSet(getConnectionGroupDirectory().getIdentifiers());
-            }
-
-        };
-    }
-
-    @Override
-    public AuthenticationProvider getAuthenticationProvider() {
-        return authenticationProvider;
-    }
-
-    public void setAuthenticationProvider(AnyhowAuthenticationProvider authenticationProvider) {
+    public void setAuthenticationProvider(AuthenticationProvider authenticationProvider) {
         this.authenticationProvider = authenticationProvider;
     }
 
     @Override
-    public Directory<Connection> getConnectionDirectory() throws GuacamoleException {
-        if (connections != null){
-            Map<String, Connection> connectionMap = new HashMap<>();
-            MapUtils.populateMap(connectionMap, connections, Connection::getIdentifier, connection -> connection);
-            return new SimpleDirectory<Connection>(connectionMap);
-        }
-        return super.getConnectionDirectory();
+    public User self() {
+        return this.self;
     }
 
     @Override
-    public Directory<ConnectionGroup> getConnectionGroupDirectory() throws GuacamoleException {
-        if (connectionGroups != null){
-            Map<String, ConnectionGroup> connectionGroupMap = new HashMap<>();
-            MapUtils.populateMap(connectionGroupMap, connectionGroups, ConnectionGroup::getIdentifier, connectionGroup -> connectionGroup);
-            return new SimpleDirectory<ConnectionGroup>(connectionGroupMap);
-        }
+    public AuthenticationProvider getAuthenticationProvider() {
+        return this.authenticationProvider;
+    }
 
-        return super.getConnectionGroupDirectory();
+    @Override
+    public Directory<User> getUserDirectory() {
+        return userDirectory;
+    }
+
+    public void setUserDirectory(Directory<User> userDirectory) {
+        this.userDirectory = userDirectory;
+    }
+
+    @Override
+    public Directory<UserGroup> getUserGroupDirectory() {
+        return userGroupDirectory;
+    }
+
+    public void setUserGroupDirectory(Directory<UserGroup> userGroupDirectory) {
+        this.userGroupDirectory = userGroupDirectory;
+    }
+
+    @Override
+    public Directory<Connection> getConnectionDirectory() {
+        return connectionDirectory;
+    }
+
+    public void setConnectionDirectory(Directory<Connection> connectionDirectory) {
+        this.connectionDirectory = connectionDirectory;
+    }
+
+    @Override
+    public Directory<ConnectionGroup> getConnectionGroupDirectory() {
+        return connectionGroupDirectory;
+    }
+
+    public void setConnectionGroupDirectory(Directory<ConnectionGroup> connectionGroupDirectory) {
+        this.connectionGroupDirectory = connectionGroupDirectory;
+    }
+
+    @Override
+    public Collection<Form> getUserAttributes() {
+        return userAttributes;
+    }
+
+    public void setUserAttributes(Collection<Form> userAttributes) {
+        this.userAttributes = userAttributes;
+    }
+
+    @Override
+    public Collection<Form> getUserGroupAttributes() {
+        return userGroupAttributes;
+    }
+
+    public void setUserGroupAttributes(Collection<Form> userGroupAttributes) {
+        this.userGroupAttributes = userGroupAttributes;
+    }
+
+    @Override
+    public Collection<Form> getConnectionAttributes() {
+        return connectionAttributes;
+    }
+
+    public void setConnectionAttributes(Collection<Form> connectionAttributes) {
+        this.connectionAttributes = connectionAttributes;
+    }
+
+    @Override
+    public Collection<Form> getConnectionGroupAttributes() {
+        return connectionGroupAttributes;
+    }
+
+    public void setConnectionGroupAttributes(Collection<Form> connectionGroupAttributes) {
+        this.connectionGroupAttributes = connectionGroupAttributes;
     }
 
 
+    @Override
+    public ConnectionGroup getRootConnectionGroup() throws GuacamoleException {
+        return this.rootConnectionGroup;
+    }
+
+    public void setRootConnectionGroup(ConnectionGroup rootConnectionGroup) {
+        this.rootConnectionGroup = rootConnectionGroup;
+    }
 }

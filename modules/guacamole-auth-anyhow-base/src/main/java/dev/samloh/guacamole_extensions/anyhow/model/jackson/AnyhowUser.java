@@ -2,21 +2,23 @@ package dev.samloh.guacamole_extensions.anyhow.model.jackson;
 
 import dev.samloh.guacamole_extensions.anyhow.util.CidrUtil;
 import org.apache.commons.codec.digest.Crypt;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.guacamole.net.auth.Credentials;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class AnyhowUser {
     private String name;
     private String identifier;
-    private Map<String, String> attributes;
+    private Map<String, String> attributes = Collections.emptyMap();
 
     private String passwordHash;
     private String password;
 
-    private List<String> cidrs;
+    private List<String> cidrs = Collections.emptyList();
 
     public String getName() {
         return name;
@@ -96,7 +98,7 @@ public class AnyhowUser {
         }
 
 
-        if (cidrs != null && !cidrs.isEmpty()) {
+        if (CollectionUtils.isNotEmpty(cidrs)) {
             if (StringUtils.isBlank(credentials.getRemoteAddress())) {
                 return false;
             }

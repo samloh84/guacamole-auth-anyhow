@@ -13,68 +13,24 @@ import org.apache.guacamole.protocol.ConfiguredGuacamoleSocket;
 import org.apache.guacamole.protocol.GuacamoleClientInformation;
 import org.apache.guacamole.protocol.GuacamoleConfiguration;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AnyhowGuacamoleConnection extends AbstractConnection {
+    private Map<String, String> attributes = new HashMap<>();
 
-    private AnyhowConnection connection;
+    public AnyhowGuacamoleConnection() {
+        this.setParentIdentifier("ROOT");
+        GuacamoleConfiguration configuration = new GuacamoleConfiguration();
+        this.setConfiguration(configuration);
+    }
 
     public AnyhowGuacamoleConnection(AnyhowConnection connection) {
-        this.connection = connection;
-    }
-
-
-    public AnyhowConnection getConnection() {
-        return connection;
-    }
-
-    public void setConnection(AnyhowConnection connection) {
-        this.connection = connection;
-    }
-
-
-    @Override
-    public String getName() {
-        return connection.getName();
-    }
-
-    @Override
-    public void setName(String name) {
-        connection.setName(name);
-    }
-
-    @Override
-    public GuacamoleConfiguration getConfiguration() {
-        return connection.toGuacamoleConfiguration();
-    }
-
-    @Override
-    public void setConfiguration(GuacamoleConfiguration configuration) {
-        connection.setProtocol(configuration.getProtocol());
-        connection.setParameters(configuration.getParameters());
-    }
-
-    @Override
-    public String getIdentifier() {
-        return connection.getIdentifier();
-    }
-
-    @Override
-    public void setIdentifier(String identifier) {
-        connection.setIdentifier(identifier);
-    }
-
-    @Override
-    public Map<String, String> getAttributes() {
-        return connection.getAttributes();
-    }
-
-    @Override
-    public void setAttributes(Map<String, String> attributes) {
-        connection.setAttributes(attributes);
+        this();
+        this.setName(connection.getName());
+        this.setIdentifier(connection.getIdentifier());
+        this.setAttributes(new HashMap<>(connection.getAttributes()));
+        this.getConfiguration().setParameters(new HashMap<>(connection.getParameters()));
+        this.getConfiguration().setProtocol(connection.getProtocol());
     }
 
     @Override
@@ -85,6 +41,16 @@ public class AnyhowGuacamoleConnection extends AbstractConnection {
     @Override
     public List<? extends ConnectionRecord> getHistory() throws GuacamoleException {
         return Collections.emptyList();
+    }
+
+    @Override
+    public Map<String, String> getAttributes() {
+        return this.attributes;
+    }
+
+    @Override
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes;
     }
 
     @Override
@@ -129,11 +95,8 @@ public class AnyhowGuacamoleConnection extends AbstractConnection {
 
     }
 
-
     @Override
     public int getActiveConnections() {
         return 0;
     }
-
-
 }

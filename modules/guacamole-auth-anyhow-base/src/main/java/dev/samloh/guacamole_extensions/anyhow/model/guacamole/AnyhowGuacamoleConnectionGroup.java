@@ -7,77 +7,60 @@ import org.apache.guacamole.net.GuacamoleTunnel;
 import org.apache.guacamole.net.auth.AbstractConnectionGroup;
 import org.apache.guacamole.protocol.GuacamoleClientInformation;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class AnyhowGuacamoleConnectionGroup extends AbstractConnectionGroup {
-    private AnyhowConnectionGroup connectionGroup;
+    private Set<String> connectionIdentifiers = new HashSet<>();
+    private Set<String> connectionGroupIdentifiers = new HashSet<>();
+    private Map<String, String> attributes = new HashMap<>();
 
+    public AnyhowGuacamoleConnectionGroup() {
+        this.setType(Type.ORGANIZATIONAL);
+    }
 
     public AnyhowGuacamoleConnectionGroup(AnyhowConnectionGroup connectionGroup) {
-        this.connectionGroup = connectionGroup;
+        this();
+        this.setName(connectionGroup.getName());
+        this.setConnectionIdentifiers(new HashSet<>(connectionGroup.getConnections()));
+        this.setConnectionGroupIdentifiers(new HashSet<>(connectionGroup.getConnectionGroups()));
+        this.setAttributes(new HashMap<>(connectionGroup.getAttributes()));
+        this.setIdentifier(connectionGroup.getIdentifier());
     }
 
-    public AnyhowConnectionGroup getConnectionGroup() {
-        return connectionGroup;
-    }
 
-    public void setConnectionGroup(AnyhowConnectionGroup connectionGroup) {
-        this.connectionGroup = connectionGroup;
+    @Override
+    public Set<String> getConnectionIdentifiers() throws GuacamoleException {
+        return this.connectionIdentifiers;
     }
 
     @Override
-    public String getIdentifier() {
-        return connectionGroup.getIdentifier();
-    }
-
-    @Override
-    public void setIdentifier(String identifier) {
-        connectionGroup.setIdentifier(identifier);
-    }
-
-    @Override
-    public String getName() {
-        return connectionGroup.getName();
-    }
-
-    @Override
-    public void setName(String name) {
-        connectionGroup.setName(name);
+    public Set<String> getConnectionGroupIdentifiers() throws GuacamoleException {
+        return this.connectionGroupIdentifiers;
     }
 
     @Override
     public Map<String, String> getAttributes() {
-        return connectionGroup.getAttributes();
+        return this.attributes;
     }
 
     @Override
     public void setAttributes(Map<String, String> attributes) {
-        connectionGroup.setAttributes(attributes);
-    }
-
-    @Override
-    public Set<String> getConnectionIdentifiers() {
-        return new HashSet<>(connectionGroup.getConnections());
+        this.attributes = attributes;
     }
 
     public void setConnectionIdentifiers(Set<String> connectionIdentifiers) {
-        connectionGroup.setConnections(new ArrayList<>(connectionIdentifiers));
-    }
-
-    @Override
-    public Set<String> getConnectionGroupIdentifiers() {
-        return new HashSet<>(connectionGroup.getConnectionGroups());
+        this.connectionIdentifiers = connectionIdentifiers;
     }
 
     public void setConnectionGroupIdentifiers(Set<String> connectionGroupIdentifiers) {
-        connectionGroup.setConnectionGroups(new ArrayList<>(connectionGroupIdentifiers));
+        this.connectionGroupIdentifiers = connectionGroupIdentifiers;
     }
 
     @Override
-    public GuacamoleTunnel connect(GuacamoleClientInformation info) throws GuacamoleException {
+    public GuacamoleTunnel connect(GuacamoleClientInformation guacamoleClientInformation) throws GuacamoleException {
         throw new GuacamoleSecurityException("Permission denied.");
     }
 
@@ -85,6 +68,4 @@ public class AnyhowGuacamoleConnectionGroup extends AbstractConnectionGroup {
     public int getActiveConnections() {
         return 0;
     }
-
-
 }

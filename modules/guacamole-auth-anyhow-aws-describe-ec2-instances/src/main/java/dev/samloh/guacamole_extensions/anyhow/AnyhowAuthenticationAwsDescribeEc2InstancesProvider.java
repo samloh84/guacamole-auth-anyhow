@@ -33,10 +33,11 @@ public class AnyhowAuthenticationAwsDescribeEc2InstancesProvider extends AnyhowA
         );
 
         if (alwaysAuthenticate) {
-            AnyhowUser user = new AnyhowUser();
-            user.setIdentifier(credentials.getUsername());
-            AnyhowGuacamoleUser anyhowGuacamoleUser = new AnyhowGuacamoleUser(user);
-            return new AnyhowGuacamoleAuthenticatedUser(this, credentials, anyhowGuacamoleUser);
+            AnyhowGuacamoleAuthenticatedUser authenticatedUser = new AnyhowGuacamoleAuthenticatedUser();
+            authenticatedUser.setIdentifier(credentials.getUsername());
+            authenticatedUser.setAuthenticationProvider(this);
+            authenticatedUser.setCredentials(credentials);
+            return authenticatedUser;
         }
 
         return super.authenticateUser(credentials);

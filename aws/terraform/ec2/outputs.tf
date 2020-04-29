@@ -10,3 +10,8 @@ output "windows_ip" {
   value = aws_instance.windows_server_2019_workload.private_ip
 }
 
+output "lambda_name" {
+  value = aws_lambda_function.guacamole_config.function_name
+}
+
+
