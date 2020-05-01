@@ -1,0 +1,130 @@
+Configuration:
+  type: object
+  properties:
+    connections:
+      type: array
+      items:
+        type: Connection
+    connectionGroups:
+      type: array
+      items:
+        type: ConnectionGroup
+    users:
+      type: array
+      items:
+        type: User
+    userGroups:
+      type: array
+      items:
+        type: UserGroup
+
+Connection:
+  type: object
+  properties:
+    name:
+      type: string
+    identifier:
+      type: string
+    attributes:
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        key1: value1
+        key2: value2
+    protocol:
+      type: string
+    parameters:
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        recording-path: /opt/guacamole/recordings
+        create-recording-path: true
+    authorizedUsers:
+      type: array
+      items:
+        type: string
+    authorizedUserGroups:
+      type: array
+      items:
+        type: string
+
+ConnectionGroup:
+  type: object
+  properties:
+    name:
+      type: string
+    identifier:
+      type: string
+    attributes:
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        key1: value1
+        key2: value2
+    connectionGroups:
+      type: array
+      items:
+        type: string
+    connections:
+      type: array
+      items:
+        type: string
+    authorizedUsers:
+      type: array
+      items:
+        type: string
+    authorizedUserGroups:
+      type: array
+      items:
+        type: string
+
+
+
+User:
+  type: object
+  properties:
+    name:
+      type: string
+    identifier:
+      type: string
+    attributes:
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        key1: value1
+        key2: value2
+    passwordHash:
+      type: string
+    cidrs:
+      type: array
+      items:
+        type: string
+
+
+UserGroup:
+  type: object
+  properties:
+    name:
+      type: string
+    identifier:
+      type: string
+    attributes:
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        key1: value1
+        key2: value2
+    users:
+      type: array
+      items:
+        type: string
+    groups:
+      type: array
+      items:
+        type: string
+

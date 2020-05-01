@@ -1,0 +1,11 @@
+#cloud-config
+runcmd:
+  - cloud-init-per once start_guacamole bash -c 'cd /root/guacamole && docker-compose up --detach'
+
+write_files:
+  - encoding: b64
+    content: |
+      ${GUACAMOLE_DOCKER_COMPOSE_YML}
+    owner: root:root
+    path: /root/guacamole/docker-compose.yml
+    permissions: '0644'
