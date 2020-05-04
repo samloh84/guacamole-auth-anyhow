@@ -13,7 +13,7 @@
     </properties>
 
     <parent>
-        <groupId>dev.samloh.guacamole_extensions</groupId>
+        <groupId>sg.gov.tech.cet</groupId>
         <artifactId>guacamole-auth-anyhow</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../</relativePath>
@@ -69,7 +69,7 @@
 
         <!-- Base Module -->
         <dependency>
-            <groupId>dev.samloh.guacamole_extensions</groupId>
+            <groupId>sg.gov.tech.cet</groupId>
             <artifactId>guacamole-auth-anyhow-base</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>

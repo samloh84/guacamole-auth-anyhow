@@ -3,6 +3,6 @@
   "name": "Anyhow File Authentication Extension",
   "namespace": "guac-auth-anyhow-file",
   "authProviders": [
-    "dev.samloh.guacamole_extensions.anyhow.AnyhowAuthenticationFileProvider"
+    "sg.gov.tech.cet.anyhowguacamoleextension.AnyhowAuthenticationFileProvider"
   ]
 }

@@ -3,6 +3,6 @@
   "name": "Anyhow Url Authentication Extension",
   "namespace": "guac-auth-anyhow-url",
   "authProviders": [
-    "dev.samloh.guacamole_extensions.anyhow.AnyhowAuthenticationUrlProvider"
+    "sg.gov.tech.cet.anyhowguacamoleextension.AnyhowAuthenticationUrlProvider"
   ]
 }

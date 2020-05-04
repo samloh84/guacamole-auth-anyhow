@@ -2,7 +2,7 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>dev.samloh.guacamole_extensions</groupId>
+    <groupId>sg.gov.tech.cet</groupId>
     <artifactId>guacamole-auth-anyhow</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>

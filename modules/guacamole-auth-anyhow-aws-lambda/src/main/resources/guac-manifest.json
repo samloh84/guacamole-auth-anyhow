@@ -3,6 +3,6 @@
   "name": "Anyhow AWS Lambda Authentication Extension",
   "namespace": "guac-auth-anyhow-aws-lambda",
   "authProviders": [
-    "dev.samloh.guacamole_extensions.anyhow.AnyhowAuthenticationAwsLambdaProvider"
+    "sg.gov.tech.cet.anyhowguacamoleextension.AnyhowAuthenticationAwsLambdaProvider"
   ]
 }

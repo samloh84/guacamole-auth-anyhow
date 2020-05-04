@@ -3,6 +3,6 @@
   "name": "Anyhow AWS Describe EC2 Instances Authentication Extension",
   "namespace": "guac-auth-anyhow-aws-describe-ec2-instances",
   "authProviders": [
-    "dev.samloh.guacamole_extensions.anyhow.AnyhowAuthenticationAwsDescribeEc2InstancesProvider"
+    "sg.gov.tech.cet.anyhowguacamoleextension.AnyhowAuthenticationAwsDescribeEc2InstancesProvider"
   ]
 }
