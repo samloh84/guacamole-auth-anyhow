@@ -1,10 +1,10 @@
 # Anyhow AWS Lambda Guacamole Authentication Extension
 
-The Anyhow AWS Lambda Guacamole Authentication Extension is intended for use with the [OpenID authentication extension][openid-auth]. 
+The [Anyhow AWS Lambda Guacamole Authentication Extension][guacamole-auth-anyhow-aws-lambda] is intended for use with the [OpenID authentication extension][openid-auth]. 
 
 ![Anyhow AWS Architecture][anyhow-aws-architecture]
 
-In the above architecture diagram, the Guacamole client is configured to leverage Azure AD OIDC flow for authentication, and a AWS Lambda for connection information.
+In the above architecture diagram, the Guacamole client is configured to leverage Azure AD OIDC flow for authentication, and an AWS Lambda for connection information.
 
 Provided in this repository are the following components:
 * [Dockerfile][anyhow-docker-guacamole-client] for building the Anyhow Guacamole Client Docker image containing the Apache Guacamole client and the Anyhow authentication extensions
@@ -21,4 +21,4 @@ Provided in this repository are the following components:
 [anyhow-aws-packer]: ../aws/packer
 [anyhow-aws-terraform-ec2]: ../aws/terraform/ec2
 [anyhow-aws-terraform-fargate]: ../aws/terraform/fargate
-
+[guacamole-auth-anyhow-aws-lambda]: ../modules/guacamole-auth-anyhow-aws-lambda

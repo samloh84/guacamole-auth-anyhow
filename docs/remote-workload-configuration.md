@@ -6,9 +6,9 @@ If your connection information does not supply user credentials to Apache Guacam
 Apache Guacamole will not be able to connect to the Windows remote workload.
 
 In order for RDP on Windows to work without providing credentials:
-    1. Disable NLA
-    2. Set 'security' parameter to 'tls'
-    
+1. Disable NLA
+2. Set 'security' parameter to 'tls'
+
 
 ## SSH on Linux
 `PasswordAuthentication` may be disabled by default on Linux instances hosted by Cloud service providers.  

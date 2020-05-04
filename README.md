@@ -11,6 +11,13 @@ Please read the Anyhow AWS Lambda authentication extension [documentation][guaca
 
 Please raise any issues in the issue tracker.
 
+## TODO
+- [ ] AWS IaC
+- [ ] AWS on-demand provisioning
+- [ ] Azure IaC
+- [ ] Azure on-demand provisioning
+- [ ] Kubernetes support
+
 ## Other Extensions  
 The configurations can be retrieved through the following mechanisms using the appropriate extension:
 * file - [guacamole-auth-anyhow-file][guacamole-auth-anyhow-file]
