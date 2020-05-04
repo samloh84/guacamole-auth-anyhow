@@ -6,7 +6,12 @@ The Anyhow series of authentication extensions allow Apache Guacamole to retriev
 
 It is not intended to perform authentication, but is to provide mechanisms for retrieving configurations.
 
-## Extensions  
+The [Anyhow AWS Lambda authentication extension][guacamole-auth-anyhow-aws-lambda] is our first cloud service provider extension, and we intend to port the extension to other cloud service providers soon.
+Please read the Anyhow AWS Lambda authentication extension [documentation][guacamole-auth-anyhow-aws-lambda-docs] for information regarding the various components in this repository and the deployment architecture for the Anyhow extensions.  
+
+Please raise any issues in the issue tracker.
+
+## Other Extensions  
 The configurations can be retrieved through the following mechanisms using the appropriate extension:
 * file - [guacamole-auth-anyhow-file][guacamole-auth-anyhow-file]
     * Read configuration from a local JSON/YAML file
