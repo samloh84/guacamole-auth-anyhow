@@ -1,20 +1,49 @@
-# Guacamole Anyhow Authentication Extension
+# Anyhow Authentication Extension for Apache Guacamole
 
-Apache Guacamole is a remote administration tool that presents a web interface to control remote workloads using RDP, VNC or SSH.
-The Anyhow series of authentication extensions allow Apache Guacamole to retrieve a configuration written in JSON/YAML and present connections to the user.
+[Apache Guacamole][apache-guacamole] is a remote administration tool that presents a web interface to control remote workloads using RDP, VNC or SSH. 
 
+The Anyhow series of authentication extensions allow Apache Guacamole to retrieve a configuration written in JSON/YAML. 
+
+It is not intended to perform authentication, but is to provide mechanisms for retrieving configurations.
+
+## Extensions  
 The configurations can be retrieved through the following mechanisms using the appropriate extension:
-* file
-* url
-* executable
-* aws-lambda
-* aws-describe-ec2-instances
+* file - [guacamole-auth-anyhow-file][guacamole-auth-anyhow-file]
+    * Read configuration from a local JSON/YAML file
+* url - [guacamole-auth-anyhow-url][guacamole-auth-anyhow-url]
+    * Read configuration from a JSON/YAML response from HTTP GET or POST requests to a URL     
+* executable - [guacamole-auth-anyhow-executable][guacamole-auth-anyhow-executable]
+    * Read configuration from a JSON/YAML output from a local executable script
+* aws-lambda - [guacamole-auth-anyhow-aws-lambda][guacamole-auth-anyhow-aws-lambda]
+    * Read configuration from a JSON/YAML response from invocation of an AWS Lambda
+    * [Further documentation][guacamole-auth-anyhow-aws-lambda-docs]    
+* aws-describe-ec2-instances - [guacamole-auth-anyhow-aws-describe-ec2-instances][guacamole-auth-anyhow-aws-describe-ec2-instances]
+    * Read configuration from querying the AWS API for describing EC2 instances
+
+
+
+## About Apache Guacamole
+[Apache Guacamole's architecture][apache-guacamole-architecture] consists of a frontend Java servlet container and a backend daemon written in C.
+
+The frontend Guacamole Client manages authentication and retrieval of remote workload connection information, presenting the authenticated remote administrator with a GUI to choose a connection.    
+
+The frontend connects to the backend daemon and supplies connection parameters to configure remote administration session parameters.
+
+Apache Guacamole is highly extensible through the creation of [custom authentication extensions][apache-guacamole-custom-auth], allowing different authentication and connection information retrieval mechanisms. 
+
 
 
 Notes:
-* In order for RDP on Windows Server to work without providing credentials:
-    1. Disable NLA
-    2. Set 'security' parameter to 'tls'
-    
-* In order for SSH to work on Linux without providing credentials:
-    1. Enable PasswordAuthentication on /etc/ssh/sshd_config
+* [Remote Workload Configuration][remote-workload-configuration]
+
+
+[apache-guacamole]: https://guacamole.apache.org/
+[apache-guacamole-architecture]: https://guacamole.apache.org/doc/gug/guacamole-architecture.html
+[apache-guacamole-custom-auth]: https://guacamole.apache.org/doc/gug/custom-auth.html
+[remote-workload-configuration]: docs/remote-workload-configuration.md
+[guacamole-auth-anyhow-file]: modules/guacamole-auth-anyhow-file
+[guacamole-auth-anyhow-url]: modules/guacamole-auth-anyhow-url
+[guacamole-auth-anyhow-executable]: modules/guacamole-auth-anyhow-executable
+[guacamole-auth-anyhow-aws-lambda]: modules/guacamole-auth-anyhow-aws-lambda
+[guacamole-auth-anyhow-aws-describe-ec2-instances]: modules/guacamole-auth-anyhow-aws-describe-ec2-instances
+[guacamole-auth-anyhow-aws-lambda-docs]: docs/guacamole-auth-anyhow-aws-lambda-docs.md
