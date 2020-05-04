@@ -6,7 +6,7 @@
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>guacamole-auth-anyhow-aws-lambda</name>
-    <url>https://github.com/samloh84/guacamole-auth-anyhow</url>
+    <url>https://gitlab.com/govtech-iacwg/guacamole-auth-anyhow</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

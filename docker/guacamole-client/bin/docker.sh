@@ -20,7 +20,7 @@ for SECRET_ENV in "${SCRIPT_PATH}"/.secret-env-*.sh; do
   echo "Loaded secret environment variables from ${SECRET_ENV}"
 done
 
-DOCKER_IMAGE_REPOSITORY="samloh84/guacamole-client"
+DOCKER_IMAGE_REPOSITORY="registry.gitlab.com/govtech-iacwg/guacamole-auth-anyhow/guacamole-client"
 DOCKER_IMAGE_TAG="latest"
 LOGBACK_LEVEL="${DEBUG_LOG:-info}"
 

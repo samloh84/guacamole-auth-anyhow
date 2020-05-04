@@ -22,7 +22,7 @@
   },
   {
     "name": "guacamole",
-    "image": "samloh84/guacamole-auth-anyhow-aws:latest",
+    "image": "registry.gitlab.com/govtech-iacwg/guacamole-auth-anyhow/guacamole-client:latest",
     "cpu": 1024,
     "memory": 2048,
     "essential": true,

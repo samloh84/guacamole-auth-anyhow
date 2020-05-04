@@ -7,7 +7,7 @@ for SECRET_ENV in $(find . -name ".secret-env-*.sh"); do
 done
 
 docker pull guacamole/guacd:latest
-docker pull samloh84/guacamole-auth-anyhow-aws:latest
+docker pull registry.gitlab.com/govtech-iacwg/guacamole-auth-anyhow/guacamole-client:latest
 
 docker rm -f guacamole guacd || true
 docker network rm guacamole || true
@@ -43,4 +43,4 @@ DOCKER_RUN_GUACAMOLE_ARGS+=" --env OPENID_REDIRECT_URI=https://guacamole.${DOMAI
 DOCKER_RUN_GUACAMOLE_ARGS+=' --env AWS_REGION=ap-southeast-1'
 DOCKER_RUN_GUACAMOLE_ARGS+=' --env DEBUG_LOG=1'
 
-docker run ${DOCKER_RUN_GUACAMOLE_ARGS} samloh84/guacamole-auth-anyhow-aws:latest
+docker run ${DOCKER_RUN_GUACAMOLE_ARGS} registry.gitlab.com/govtech-iacwg/guacamole-auth-anyhow/guacamole-client:latest

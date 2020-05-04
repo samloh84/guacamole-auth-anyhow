@@ -7,5 +7,5 @@ if [ ${EUID} != 0 ]; then
 fi
 
 docker pull guacamole/guacd:latest
-docker pull samloh84/guacamole-client:latest
+docker pull registry.gitlab.com/govtech-iacwg/guacamole-auth-anyhow/guacamole-client:latest
 
