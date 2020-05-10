@@ -1,114 +1,117 @@
-#!/usr/bin/make -f
+SHELL := /bin/bash
+.SHELLFLAGS := -ec
 
-SHELL = /bin/bash
+.PHONY: build push save load rmi run rund run_shell exec_shell kill logs logsf rm start stop
 
-.PHONY: clean plan apply destroy refresh output ssh scp invoke_lambda ssh_keygen build_lambda build_jar build_docker build
+TERRAFORM_TFVARS_FILE_PATTERNS := *.tfvars
 
-LAMBDA_FUNCTION := 'guacamole-config'
+define _LOAD_AWSRC :=
+	if [[ -f "$${HOME}/.awsrc" ]]; then \
+		source "$${HOME}/.awsrc"; \
+	fi; \
+	if [[ -f "$(CURDIR)/.awsrc" ]]; then \
+		source "$(CURDIR)/.awsrc";  \
+	fi
+endef
 
-define BUILD_TERRAFORM_ARGS
-VAR_FILE_ARGS="" && \
-for VAR_FILE in $$(find . -name "*.tfvars"); \
-do VAR_FILE_ARGS+=" -var-file=$${VAR_FILE}"; \
-done
+define _SET_TERRAFORM_VAR_FILE_ARGS :=
+	if [[ ! -z "$(TERRAFORM_TFVARS_FILE_PATTERNS)" ]]; then \
+		TERRAFORM_TFVARS_FILE_PATTERNS=($(TERRAFORM_TFVARS_FILE_PATTERNS)); \
+	else \
+		TERRAFORM_TFVARS_FILE_PATTERNS=(); \
+	fi; \
+	TERRAFORM_VAR_FILE_ARGS=(); \
+	for TERRAFORM_TFVARS_FILE_PATTERN in $${TERRAFORM_TFVARS_FILE_PATTERNS[@]}; do \
+		for TERRAFORM_TFVARS_FILE in $$(find $(CURDIR) -name "$${TERRAFORM_TFVARS_FILE_PATTERN}"); do \
+			TERRAFORM_VAR_FILE_ARGS+=("-var-file" "$${TERRAFORM_TFVARS_FILE}"); \
+		done; \
+	done
+endef
+
+define _SET_CENTOS_WORKLOAD_PRIVATE_IPS :=
+	TERRAFORM_OUTPUT_PROJECT=$$(terraform output project); \
+	TERRAFORM_OUTPUT_OWNER=$$(terraform output project); \
+	CENTOS_WORKLOAD_IPS=($$(aws ec2 describe-instances \
+	--filter "Name=tag:Name,Values=$${TERRAFORM_OUTPUT_PROJECT}-centos-workload" \
+	--filter "Name=tag:Project,Values=$${TERRAFORM_OUTPUT_PROJECT}" \
+	--filter "Name=tag:Owner,Values=$${TERRAFORM_OUTPUT_OWNER}" \
+	 | jq -r .Reservations[].Instances[].PrivateIpAddress ))
+endef
+
+define _SET_CENTOS_WORKLOAD_PRIVATE_IPS :=
+	TERRAFORM_OUTPUT_PROJECT=$$(terraform output project); \
+	TERRAFORM_OUTPUT_OWNER=$$(terraform output project); \
+	WINDOWS_WORKLOAD_IPS=($$(aws ec2 describe-instances \
+	--filter "Name=tag:Name,Values=$${TERRAFORM_OUTPUT_PROJECT}-windows-workload" \
+	--filter "Name=tag:Project,Values=$${TERRAFORM_OUTPUT_PROJECT}" \
+	--filter "Name=tag:Owner,Values=$${TERRAFORM_OUTPUT_OWNER}" \
+	 | jq -r .Reservations[].Instances[].PrivateIpAddress ))
+endef
+
+define _SET_GUACAMOLE_JUMPHOST_PUBLIC_IPS :=
+	TERRAFORM_OUTPUT_PROJECT=$$(terraform output project); \
+	TERRAFORM_OUTPUT_OWNER=$$(terraform output owner); \
+	GUACAMOLE_JUMPHOST_PUBLIC_IPS=($$(aws ec2 describe-instances \
+	--filters "Name=instance-state-name,Values=running" \
+	"Name=tag:Name,Values=$${TERRAFORM_OUTPUT_PROJECT}-guacamole-jumphost" \
+	"Name=tag:Project,Values=$${TERRAFORM_OUTPUT_PROJECT}" \
+	"Name=tag:Owner,Values=$${TERRAFORM_OUTPUT_OWNER}" \
+	 | jq -r .Reservations[].Instances[].PublicIpAddress )); \
+	 echo "$${GUACAMOLE_JUMPHOST_PUBLIC_IPS[@]}"
+endef
+
+define _SET_SSH_KEY_NAME :=
+	SSH_KEY_NAME="$$(terraform output key_name)"
 endef
 
 all: apply
 
-build: build_docker build_lambda build_jar
-
-build_docker:
-	$(MAKE) -C ../ build_docker
-
-build_lambda:
-	$(MAKE) -C ../ build_lambda
-
-build_jar:
-	$(MAKE) -C ../ build_jar
-
-clean:
-	rm -rf ./.terraform ./terraform.* ./.terraform*
-
-ssh_keygen:
-	ssh-keygen -f ~/.ssh/guacamole -t rsa -m PEM -b 4096 -a 100
-
-plan:
-	terraform init && \
-	$(call BUILD_TERRAFORM_ARGS) && \
-	terraform plan $${VAR_FILE_ARGS}
-
 apply:
-	if [[ ! -f ../lambda-guacamole-config/output/guacamole-config.zip ]]; then $(MAKE) -C ../lambda-guacamole-config build; fi
-	terraform init && \
-	$(call BUILD_TERRAFORM_ARGS) && \
-	terraform apply $${VAR_FILE_ARGS} -auto-approve
+	set -euxo pipefail; \
+	$(call _LOAD_AWSRC); \
+	$(call _SET_TERRAFORM_VAR_FILE_ARGS); \
+	TERRAFORM_APPLY_ARGS=("-auto-approve" "$${TERRAFORM_VAR_FILE_ARGS[@]}"); \
+	terraform init; \
+	terraform apply "$${TERRAFORM_APPLY_ARGS[@]}"
 
 destroy:
-	terraform init && \
-	$(call BUILD_TERRAFORM_ARGS) && \
-	terraform destroy $${VAR_FILE_ARGS} -auto-approve
+	set -euxo pipefail; \
+	$(call _LOAD_AWSRC); \
+	$(call _SET_TERRAFORM_VAR_FILE_ARGS); \
+	TERRAFORM_DESTROY_ARGS=("-auto-approve" "$${TERRAFORM_VAR_FILE_ARGS[@]}"); \
+	terraform init; \
+	terraform destroy "$${TERRAFORM_DESTROY_ARGS[@]}"
 
 refresh:
-	terraform init && \
-	$(call BUILD_TERRAFORM_ARGS) && \
-	terraform refresh $${VAR_FILE_ARGS}
+	set -euxo pipefail; \
+	$(call _LOAD_AWSRC); \
+	$(call _SET_TERRAFORM_VAR_FILE_ARGS); \
+	TERRAFORM_REFRESH_ARGS=("$${TERRAFORM_VAR_FILE_ARGS[@]}"); \
+	terraform init; \
+	terraform refresh "$${TERRAFORM_REFRESH_ARGS[@]}"
 
-output: refresh
+output:
+	set -euxo pipefail; \
+	$(call _LOAD_AWSRC); \
+	terraform init; \
 	terraform output
 
-
-
-ssh:
-	SSH_SERVER=$$(terraform output -json | jq -r '.guacamole_ip.value') && \
-	CENTOS_SERVER=$$(terraform output -json | jq -r '.centos_ip.value') && \
-	WINDOWS_SERVER=$$(terraform output -json | jq -r '.windows_ip.value') && \
-	eval $$(ssh-agent) && ssh-add ~/.ssh/guacamole && \
-	SSH_ARGS="-o StrictHostKeyChecking=no" && \
-	SSH_ARGS+=" -o ForwardAgent=yes" && \
-	SSH_ARGS+=" -L63389:$${WINDOWS_SERVER}:3389" && \
-	SSH_ARGS+=" -L6622:$${CENTOS_SERVER}:22" && \
-	ssh $${SSH_ARGS} centos@$${SSH_SERVER}
-
-
-ssh_centos:
-	set -euxo pipefail && \
-	SSH_SERVER=$$(terraform output -json | jq -r '.guacamole_ip.value') && \
-	CENTOS_SERVER=$$(terraform output -json | jq -r '.centos_ip.value') && \
-	eval $$(ssh-agent) && ssh-add ~/.ssh/guacamole && \
-	SSH_ARGS="-o StrictHostKeyChecking=no" && \
-	SSH_ARGS+=" -o ForwardAgent=yes" && \
-	SSH_ARGS+=" -J centos@$${SSH_SERVER}" && \
-	ssh $${SSH_ARGS} centos@$${CENTOS_SERVER}
-
-
-scp_centos:
-	set -euxo pipefail && \
-	SSH_SERVER=$$(terraform output -json | jq -r '.guacamole_ip.value') && \
-	CENTOS_SERVER=$$(terraform output -json | jq -r '.centos_ip.value') && \
-	CENTOS_SERVER_NEW_PASSWORD_HASH=$$(openssl passwd -1 Pass1234) && \
-	eval $$(ssh-agent) && ssh-add ~/.ssh/guacamole && \
-	SSH_ARGS="-o StrictHostKeyChecking=no" && \
-	SSH_ARGS+=" -o ForwardAgent=yes" && \
-	SSH_ARGS+=" -J centos@$${SSH_SERVER}" && \
-	SSH_COMMANDS="set -euxo pipefail;" && \
-	SSH_COMMANDS+="sudo sed -i -e 's:#PasswordAuthentication:PasswordAuthentication:g' /etc/ssh/sshd_config;" && \
-	SSH_COMMANDS+="sudo usermod centos --password '$${CENTOS_SERVER_NEW_PASSWORD_HASH}';" && \
-	SSH_COMMANDS+="sudo systemctl restart sshd;" && \
-	ssh $${SSH_ARGS} centos@$${CENTOS_SERVER} "$${SSH_COMMANDS}"
-
-
-
-
-
-
-
-scp:
+ssh_jumphost:
 	set -euxo pipefail; \
-	SSH_SERVER=$$(terraform output -json | jq -r '.guacamole_ip.value'); \
-	eval $$(ssh-agent) && ssh-add ~/.ssh/guacamole; \
-	SSH_ARGS="-i ~/.ssh/guacamole -o StrictHostKeyChecking=no"; \
-	scp $${SSH_ARGS} $$(find ./guacamole-scripts -name "*.sh") centos@$${SSH_SERVER}:/home/centos/; \
-	ssh $${SSH_ARGS} centos@$${SSH_SERVER} 'chmod +x /home/centos/*.sh; sudo /home/centos/install-docker.sh; sudo /home/centos/install-aws-cli.sh; sudo /home/centos/run-guacamole.sh'
+	$(call _LOAD_AWSRC); \
+	$(call _SET_GUACAMOLE_JUMPHOST_PUBLIC_IPS); \
+	$(call _SET_SSH_KEY_NAME); \
+	SSH_ARGS=(); \
+	if [[ ! -z "$${SSH_KEY_NAME}" ]]; then \
+	  	if [[ -f "$${HOME}/.ssh/$${SSH_KEY_NAME}" ]]; then \
+	  		SSH_ARGS+=("-i" "$${HOME}/.ssh/$${SSH_KEY_NAME}"); \
+		elif [[ -f "$${HOME}/.ssh/$${SSH_KEY_NAME}.key" ]]; then \
+			SSH_ARGS+=("-i" "$${HOME}/.ssh/$${SSH_KEY_NAME}.key"); \
+		elif [[ -f "$${HOME}/.ssh/$${SSH_KEY_NAME}.pem" ]]; then \
+			SSH_ARGS+=("-i" "$${HOME}/.ssh/$${SSH_KEY_NAME}.pem"); \
+  		fi; \
+	fi; \
+	SSH_ARGS+=("centos@$${GUACAMOLE_JUMPHOST_PUBLIC_IPS[0]}"); \
+	SSH_ARGS+=("-o StrictHostKeyChecking=no"); \
+	ssh "$${SSH_ARGS[@]}"
 
-invoke_lambda:
-	aws lambda invoke --function-name ${LAMBDA_FUNCTION} /dev/stdout

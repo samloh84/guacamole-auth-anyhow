@@ -9,3 +9,4 @@ venv/
 terraform.tfstate*
 .terraform/
 *secret*
+.awsrc
