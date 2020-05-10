@@ -104,7 +104,6 @@ define _SET_DOCKER_IMAGE_BUILD_BUILD_ARG_ARGS :=
 		for DOCKER_IMAGE_BUILD_ENV_FILE in $$(find $(CURDIR) -name "$${DOCKER_IMAGE_BUILD_ENV_FILE_PATTERN}"); do \
 			while read -r DOCKER_IMAGE_BUILD_ENV_FILE_LINE; do \
 				DOCKER_IMAGE_BUILD_BUILD_ARG_ARGS+=("--build-arg" "$${DOCKER_IMAGE_BUILD_ENV_FILE_LINE}"); \
-				echo "$${DOCKER_IMAGE_BUILD_BUILD_ARG_ARGS[@]}"; \
 			done <<<$$(cat "$${DOCKER_IMAGE_BUILD_ENV_FILE}" | envsubst); \
 		done; \
 	done
@@ -164,7 +163,6 @@ build: anyhow_extensions
 	for DOCKER_FULL_IMAGE_NAME in "$${DOCKER_FULL_IMAGE_NAMES[@]}"; do \
 		DOCKER_IMAGE_BUILD_ARGS+=("--tag" "$${DOCKER_FULL_IMAGE_NAME}"); \
 	done; \
-	echo "$${DOCKER_IMAGE_BUILD_BUILD_ARG_ARGS[@]}"; \
 	DOCKER_IMAGE_BUILD_ARGS+=("$${DOCKER_IMAGE_BUILD_BUILD_ARG_ARGS[@]}"); \
 	DOCKER_IMAGE_BUILD_ARGS+=("$(CURDIR)"); \
 	docker image build "$${DOCKER_IMAGE_BUILD_ARGS[@]}"

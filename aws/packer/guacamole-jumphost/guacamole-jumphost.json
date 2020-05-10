@@ -1,0 +1,73 @@
+{
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "ap-southeast-1",
+      "source_ami_filter": {
+        "filters": {
+          "product-code": "aw0evgkw8e5c1q413zgy5pjce",
+          "ena-support": "true",
+          "owner-alias": "aws-marketplace"
+        },
+        "owners": [
+          "679593333241"
+        ],
+        "most_recent": true
+      },
+      "instance_type": "t3.micro",
+      "ssh_username": "centos",
+      "ami_name": "{{user `project`}}-guacamole-jumphost {{timestamp}}",
+      "tags": {
+        "Name": "{{user `project`}}-guacamole-jumphost",
+        "Project": "{{user `project`}}",
+        "Owner": "{{user `owner`}}"
+      },
+      "temporary_security_group_source_cidrs": [
+        "{{user `local_cidr`}}"
+      ],
+      "temporary_iam_instance_profile_policy_document": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Action": [
+              "ecr:*"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+          }
+        ]
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/install-aws-cli.sh",
+        "scripts/install-docker.sh",
+        "scripts/pull-images.sh"
+      ],
+      "environment_vars": [
+        "OWNER={{user `owner`}}",
+        "PROJECT={{user `project`}}",
+        "LOCAL_CIDR={{user `local_cidr`}}",
+        "GUACAMOLE_CLIENT_DOCKER_FULL_IMAGE_NAME={{user `guacamole_client_docker_full_image_name`}}",
+        "DOCKER_REPOSITORY_URL={{user `docker_repository_url`}}",
+        "DOCKER_REPOSITORY_USERNAME={{user `docker_repository_username`}}",
+        "DOCKER_REPOSITORY_PASSWORD={{user `docker_repository_password`}}",
+        "AWS_ECR_GET_LOGIN_PASSWORD={{user `aws_ecr_get_login_password`}}"
+      ],
+      "execute_command": "sudo /bin/bash -c '{{ .Vars }} {{ .Path }}'"
+    }
+  ],
+  "variables": {
+    "owner": "{{env `OWNER`}}",
+    "project": "{{env `PROJECT`}}",
+    "local_cidr": "{{env `LOCAL_CIDR`}}",
+    "guacamole_client_docker_full_image_name": "{{env `GUACAMOLE_CLIENT_DOCKER_FULL_IMAGE_NAME`}}",
+    "docker_repository_url": "{{env `DOCKER_REPOSITORY_URL`}}",
+    "docker_repository_username": "{{env `DOCKER_REPOSITORY_USERNAME`}}",
+    "docker_repository_password": "{{env `DOCKER_REPOSITORY_PASSWORD`}}",
+    "aws_ecr_get_login_password": "{{env `AWS_ECR_GET_LOGIN_PASSWORD`}}"
+  }
+}

@@ -1,17 +1,18 @@
-output "guacamole_ip" {
-  value = aws_instance.guacamole_jumphost.public_ip
+output "project" {
+  value = var.project
+}
+output "owner" {
+  value = var.owner
 }
 
-output "centos_ip" {
-  value = aws_instance.centos_workload.private_ip
+output "module_demo_vpc" {
+  value = module.demo_vpc
 }
 
-output "windows_ip" {
-  value = aws_instance.windows_server_2019_workload.private_ip
+output "module_demo_centos_workloads" {
+  value = module.demo_centos_workloads
 }
 
-output "lambda_name" {
-  value = aws_lambda_function.guacamole_config.function_name
+output "key_name" {
+  value = var.key_name
 }
-
-
