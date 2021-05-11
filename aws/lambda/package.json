@@ -12,7 +12,7 @@
   "dependencies": {
     "aws-sdk": "^2.657.0",
     "bluebird": "^3.7.2",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
